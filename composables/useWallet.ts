@@ -22,7 +22,7 @@ export function useWallet() {
       await new Promise(resolve => setTimeout(resolve, 500))
     } catch (err) {
       error.value = 'Failed to fetch wallet balance'
-      console.error(err)
+      // console.error(err)
     } finally {
       isLoading.value = false
     }
@@ -57,7 +57,7 @@ export function useWallet() {
       return true
     } catch (err) {
       error.value = 'Failed to process withdrawal'
-      console.error(err)
+      // console.error(err)
       return false
     } finally {
       isLoading.value = false

@@ -52,7 +52,7 @@ export function useSubscriptions() {
       
       return true
     } catch (error) {
-      console.error('Subscription failed:', error)
+      // console.error('Subscription failed:', error)
       return false
     } finally {
       isLoading.value = false
@@ -71,7 +71,7 @@ export function useSubscriptions() {
       
       return true
     } catch (error) {
-      console.error('Cancellation failed:', error)
+      // console.error('Cancellation failed:', error)
       return false
     } finally {
       isLoading.value = false

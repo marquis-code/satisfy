@@ -15,10 +15,10 @@ export const useVendorLogin = () => {
 
     try {
       const res = (await auth_api.$_vendor_login(credentials)) as any
-      console.log(res, 'tes ')
+      // console.log(res, 'tes ')
       if (res.type !== "ERROR") {
         // Handle successful login
-        console.log(res, 'reshere')
+        // console.log(res, 'reshere')
         createUser(res)
         router.push('/dashboard')
         return res

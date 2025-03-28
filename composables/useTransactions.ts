@@ -34,7 +34,7 @@ export function useTransactions() {
       await new Promise(resolve => setTimeout(resolve, 500))
     } catch (err) {
       error.value = 'Failed to fetch transactions'
-      console.error(err)
+      // console.error(err)
     } finally {
       isLoading.value = false
     }
