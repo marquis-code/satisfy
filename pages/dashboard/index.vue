@@ -15,7 +15,7 @@
         </div>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="space-y-9">
         <!-- Welcome Card -->
         <div class="md:col-span-1 bg-white rounded-lg shadow-sm overflow-hidden">
           <div class="relative h-64 bg-gradient-to-r from-amber-500 to-amber-300">
@@ -71,7 +71,7 @@
               <h3 class="text-sm font-medium text-gray-500">Wallet Balance</h3>
               <Wallet class="h-4 w-4 text-gray-500" />
             </div>
-            <div class="text-2xl font-bold">₦0.00</div>
+            <div class="text-2xl font-bold">₦{{wallet?.balance ?? 0}}</div>
           </div>
           
           <div class="bg-white rounded-lg shadow-sm p-4">
@@ -79,7 +79,7 @@
               <h3 class="text-sm font-medium text-gray-500">Total Menus</h3>
               <Clipboard class="h-4 w-4 text-gray-500" />
             </div>
-            <div class="text-2xl font-bold">38</div>
+            <div class="text-2xl font-bold">{{menus?.data?.length ?? 0}}</div>
           </div>
           
           <div class="bg-white rounded-lg shadow-sm p-4">
@@ -199,7 +199,14 @@
     X 
   } from 'lucide-vue-next';
   import BarChart from '@/components/BarChart.vue';
-
+  import { useVendorWallet } from '@/composables/modules/vendor/useVendorWallet'
+  import { useFetchMenu } from '@/composables/modules/menu/useFetchMenu'
+  import { useCloseStore } from "@/composables/modules/vendor/useCloseStore"
+    import { useOpenStore } from "@/composables/modules/vendor/useOpenStore"
+  const { menus, fetchMenu, loading } = useFetchMenu()
+  const { wallet, loading: fetchingWallet } = useVendorWallet()
+  const { closeStore, loading: closing } = useCloseStore()
+  const { opeStore, loading: opeing } = useOpenStore()
   definePageMeta({
       layout: 'dashboard'
   })

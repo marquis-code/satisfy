@@ -140,6 +140,7 @@
       </div>
 
       <main class="container mx-auto px-4 pb-10">
+        <!-- {{vendors}} -->
       <PromotedVendors />
       <VendorsInFunaab />
     </main>
@@ -182,7 +183,9 @@
 </template>
 
 <script setup lang="ts">
+import { useFetchVendors } from '@/composables/modules/vendor/useFetchVendors'
 import { ArrowRight, Info, Utensils, Clock, BadgePercent, Pizza,  } from 'lucide-vue-next';
+const { vendors, loading } = useFetchVendors()
 </script>
 
 <style scoped>

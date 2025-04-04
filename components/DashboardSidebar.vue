@@ -3,10 +3,10 @@
     <!-- Mobile Hamburger Menu Button -->
     <button 
       @click="isMobileMenuOpen = !isMobileMenuOpen"
-      class="fixed top-4 left-4 z-50 p-2 rounded-md bg-[#1e2530] text-white md:hidden"
+      class="fixed top-4 left-4 z-50 p-2 rounded-md bg-[#1e2530] text-white md:hidden hover:bg-[#2a3441] transition-colors"
     >
-      <Menu v-if="!isMobileMenuOpen" size="24" />
-      <X v-else size="24" />
+      <Menu v-if="!isMobileMenuOpen" size="24" class="animate-spin-slow" />
+      <X v-else size="24" class="animate-bounce-light" />
     </button>
     
     <!-- Sidebar -->
@@ -19,9 +19,11 @@
     >
       <div class="p-4 border-b border-gray-700 flex items-center justify-between">
         <div :class="['flex items-center', isCollapsed && 'justify-center w-full']">
-          <div v-if="!isCollapsed" class="h-8 bg-blue-500 rounded px-2 text-white font-bold">LOGO</div>
-          <div v-else class="h-8 w-8 bg-blue-500 rounded flex items-center justify-center text-white font-bold">L</div>
+          <!-- <div v-if="!isCollapsed" class="h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded px-2 text-white font-bold shadow-glow">LOGO</div> -->
+          <img src="@/assets/img/satisfy-logo-white.png" class="h-10 w-10" />
+          <!-- <div v-else class="h-8 w-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded flex items-center justify-center text-white font-bold shadow-glow">L</div> -->
         </div>
+        
         <button 
           @click="isCollapsed = !isCollapsed"
           :class="[
@@ -30,12 +32,12 @@
             'hidden md:block' // Hide on mobile
           ]"
         >
-          <ChevronLeft v-if="!isCollapsed" size="20" />
-          <ChevronRight v-else size="20" />
+          <ChevronLeft v-if="!isCollapsed" size="20" class="hover:animate-pulse" />
+          <ChevronRight v-else size="20" class="hover:animate-pulse" />
         </button>
       </div>
 
-      <div class="flex-1 overflow-y-auto py-4">
+      <div class="flex-1 overflow-y-auto py-4 sidebar-content">
         <div class="mb-6">
           <p :class="[
             'px-4 text-xs uppercase text-gray-500 font-medium mb-2',
@@ -49,22 +51,25 @@
             <div 
               v-for="item in navItems" 
               :key="item.label"
-              class="relative"
+              class="relative menu-container"
             >
               <!-- Regular Nav Item -->
               <NuxtLink 
                 v-if="!item.children"
                 :to="item.path"
                 :class="[
-                  'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300',
+                  'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300 menu-item relative overflow-hidden',
                   isCollapsed && 'justify-center',
-                  isActiveRoute(item.path) && 'bg-blue-600 text-white relative'
+                  isActiveRoute(item.path) && 'bg-blue-600 text-white'
                 ]"
               >
                 <component 
                   :is="item.icon" 
                   size="20" 
-                  :class="{ 'animate-pulse': isActiveRoute(item.path) }"
+                  :class="[
+                    'transition-transform duration-300',
+                    isActiveRoute(item.path) ? 'text-white animate-float' : 'text-gray-400 group-hover:text-white'
+                  ]"
                 />
                 <span 
                   v-if="!isCollapsed" 
@@ -77,7 +82,7 @@
                 </span>
                 <div 
                   v-if="isActiveRoute(item.path)" 
-                  class="absolute left-0 top-0 bottom-0 w-1 bg-blue-400 animate-fadeIn"
+                  class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 to-blue-600 active-indicator"
                 ></div>
               </NuxtLink>
 
@@ -86,7 +91,7 @@
                 <button 
                   @click="toggleMenu(item.key)"
                   :class="[
-                    'w-full flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors',
+                    'w-full flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors menu-item relative overflow-hidden',
                     isCollapsed && 'justify-center',
                     isActiveParent(item.path) && 'bg-blue-600/50 text-white'
                   ]"
@@ -94,28 +99,31 @@
                   <component 
                     :is="item.icon" 
                     size="20" 
-                    :class="{ 'animate-pulse': isActiveParent(item.path) }"
+                    :class="[
+                      'transition-transform duration-300',
+                      isActiveParent(item.path) ? 'text-white animate-float' : 'text-gray-400'
+                    ]"
                   />
                   <template v-if="!isCollapsed">
                     <span class="ml-3 flex-1 text-left">{{ item.label }}</span>
                     <ChevronDown 
                       size="16" 
                       :class="[
-                        'transition-transform duration-200', 
-                        expandedMenus[item.key] && 'transform rotate-180'
+                        'transition-transform duration-300', 
+                        expandedMenus[item.key] ? 'transform rotate-180' : ''
                       ]" 
                     />
                   </template>
                   <div 
                     v-if="isActiveParent(item.path)" 
-                    class="absolute left-0 top-0 bottom-0 w-1 bg-blue-400 animate-fadeIn"
+                    class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 to-blue-600 active-indicator"
                   ></div>
                 </button>
                 
                 <div 
                   v-if="!isCollapsed" 
                   :class="[
-                    'pl-12 py-1 overflow-hidden transition-all duration-200 ease-in-out',
+                    'pl-12 py-1 overflow-hidden transition-all duration-300 ease-in-out submenu',
                     expandedMenus[item.key] ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
                   ]"
                 >
@@ -124,14 +132,14 @@
                     :key="child.label"
                     :to="child.path"
                     :class="[
-                      'flex items-center py-1.5 px-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300 rounded-md relative',
+                      'flex items-center py-1.5 px-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300 rounded-md relative submenu-item overflow-hidden',
                       isActiveRoute(child.path) && 'bg-blue-600 text-white'
                     ]"
                   >
                     <span>{{ child.label }}</span>
                     <div 
                       v-if="isActiveRoute(child.path)" 
-                      class="absolute left-0 top-0 bottom-0 w-1 bg-blue-400 animate-fadeIn"
+                      class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 to-blue-600 active-indicator"
                     ></div>
                   </NuxtLink>
                 </div>
@@ -154,7 +162,7 @@
               :key="item.label"
               :to="item.path"
               :class="[
-                'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300 relative',
+                'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300 relative menu-item overflow-hidden',
                 isCollapsed && 'justify-center',
                 isActiveRoute(item.path) && 'bg-blue-600 text-white'
               ]"
@@ -162,7 +170,10 @@
               <component 
                 :is="item.icon" 
                 size="20" 
-                :class="{ 'animate-pulse': isActiveRoute(item.path) }"
+                :class="[
+                  'transition-transform duration-300',
+                  isActiveRoute(item.path) ? 'text-white animate-float' : 'text-gray-400'
+                ]"
               />
               <span 
                 v-if="!isCollapsed" 
@@ -175,7 +186,7 @@
               </span>
               <div 
                 v-if="isActiveRoute(item.path)" 
-                class="absolute left-0 top-0 bottom-0 w-1 bg-blue-400 animate-fadeIn"
+                class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 to-blue-600 active-indicator"
               ></div>
             </NuxtLink>
             
@@ -183,11 +194,11 @@
             <button 
               @click="showLogoutModal = true"
               :class="[
-                'flex items-center px-4 py-2 text-gray-300 hover:bg-red-500 hover:text-white transition-all duration-300 relative w-full',
+                'flex items-center px-4 py-2 text-gray-300 hover:bg-red-500 hover:text-white transition-all duration-300 relative w-full menu-item overflow-hidden',
                 isCollapsed && 'justify-center'
               ]"
             >
-              <LogOut size="20" />
+              <LogOut size="20" class="text-gray-400 group-hover:text-white" />
               <span v-if="!isCollapsed" class="ml-3">Logout</span>
             </button>
           </nav>
@@ -198,7 +209,7 @@
     <!-- Overlay for mobile menu -->
     <div 
       v-if="isMobileMenuOpen" 
-      class="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+      class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-30 md:hidden overlay-fade-in"
       @click="isMobileMenuOpen = false"
     ></div>
     
@@ -423,18 +434,40 @@ const supportItems = reactive<NavItem[]>([
   }
 ]);
 
-// Check if a route is active
+// Updated active route checking functions
 const isActiveRoute = (path: string): boolean => {
   if (path === '#') return false;
-  return route.path === path || route.path.startsWith(`${path}/`);
+  
+  // Exact match for parent routes
+  if (!path.includes('/dashboard/')) {
+    return route.path === path;
+  }
+  
+  // For dashboard routes, be more specific to avoid multiple highlights
+  const routeParts = route.path.split('/');
+  const pathParts = path.split('/');
+  
+  // If the path has fewer segments than the current route, it needs to be an exact match
+  // This prevents parent routes from being active when child routes are active
+  if (pathParts.length < routeParts.length) {
+    return route.path === path;
+  }
+  
+  // Otherwise, check if it's an exact match
+  return route.path === path;
 };
 
 // Check if a parent route is active (any child is active)
 const isActiveParent = (parentPath: string): boolean => {
-  // Check if the current route starts with the parent path
-  if (route.path.startsWith(parentPath)) {
-    // Make sure it's not just the parent path itself (which would be handled by isActiveRoute)
-    return route.path !== parentPath;
+  // Only return true if we're on a child route and not the parent itself
+  if (route.path.startsWith(parentPath) && route.path !== parentPath) {
+    // Make sure we're actually on a direct child, not a deeply nested route
+    // that would cause multiple parent highlights
+    const routeDepth = route.path.split('/').length;
+    const parentDepth = parentPath.split('/').length;
+    
+    // Only highlight direct parent
+    return routeDepth === parentDepth + 1;
   }
   return false;
 };
@@ -524,12 +557,146 @@ onMounted(() => {
   }
 }
 
+/* Enhanced Animations */
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce-light {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes highlightIn {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes ripple {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-in-out;
 }
 
 .animate-pulse {
   animation: pulse 1s infinite;
+}
+
+.animate-float {
+  animation: float 2s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+.animate-bounce-light {
+  animation: bounce-light 0.5s ease infinite;
+}
+
+.shadow-glow {
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+/* Active Indicator Animation */
+.active-indicator {
+  transform-origin: left;
+  animation: highlightIn 0.3s ease-out forwards;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+/* Menu Item Hover Effect */
+.menu-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.05);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.menu-item:hover::after {
+  transform: translateX(0);
+}
+
+/* Submenu Animation */
+.submenu {
+  transition: max-height 0.3s ease, opacity 0.2s ease;
+}
+
+.submenu-item {
+  transform: translateX(-5px);
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.submenu-item:nth-child(1) { animation-delay: 0.05s; }
+.submenu-item:nth-child(2) { animation-delay: 0.1s; }
+.submenu-item:nth-child(3) { animation-delay: 0.15s; }
+
+/* Sidebar Content Scroll Animation */
+.sidebar-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Overlay Animation */
+.overlay-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 /* Modal Animations */
@@ -781,5 +948,24 @@ onMounted(() => {
   100% {
     transform: scale(1) translateX(0);
   }
+}
+
+/* Menu container hover effect */
+.menu-container:hover .menu-item:not(:hover) {
+  filter: brightness(0.9);
+}
+
+/* Ripple effect for active items */
+.menu-item.bg-blue-600::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: rgba(59, 130, 246, 0.7);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  animation: ripple 1.5s infinite;
 }
 </style>
