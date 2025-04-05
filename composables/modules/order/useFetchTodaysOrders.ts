@@ -12,10 +12,10 @@ export const useFetchVendorTodaysOrder = () => {
 
     try {
       const res = (await order_api.$_get_vendor_todays_order()) as any
-      console.log(res.data.data, 'res here again')
+      console.log(res.data, 'res here again')
       if (res.type !== "ERROR") {
-        ordersList.value = res.data.data
-        return res.data.data
+        ordersList.value = res?.data?.orders
+        return res?.data?.orders
       } else {
         error.value = res.message || "Failed to fetch todays orders"
       }

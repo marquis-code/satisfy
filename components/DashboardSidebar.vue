@@ -360,11 +360,11 @@ const navItems = reactive<NavItem[]>([
   { 
     icon: ShoppingBag, 
     label: "Orders", 
-    path: "/dashboard/orders",
+    path: "/dashboard/order",
     key: "orders",
     children: [
-      { label: "Today Orders", path: "/dashboard/orders/today" },
-      { label: "All Orders", path: "/dashboard/orders/all" }
+      { label: "Today Orders", path: "/dashboard/order/today" },
+      { label: "All Orders", path: "/dashboard/order/all" }
     ]
   },
   { 

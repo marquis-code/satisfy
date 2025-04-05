@@ -87,7 +87,7 @@
               <h3 class="text-sm font-medium text-gray-500">Today's Orders</h3>
               <ShoppingBag class="h-4 w-4 text-gray-500" />
             </div>
-            <div class="text-2xl font-bold">7</div>
+            <div class="text-2xl font-bold">{{ordersList?.length ?? 0}}</div>
           </div>
         </div>
       </div>
@@ -202,11 +202,13 @@
   import { useVendorWallet } from '@/composables/modules/vendor/useVendorWallet'
   import { useFetchMenu } from '@/composables/modules/menu/useFetchMenu'
   import { useCloseStore } from "@/composables/modules/vendor/useCloseStore"
-    import { useOpenStore } from "@/composables/modules/vendor/useOpenStore"
+  import { useOpenStore } from "@/composables/modules/vendor/useOpenStore"
+  import { useFetchVendorTodaysOrder } from '@/composables/modules/order/useFetchTodaysOrders'
   const { menus, fetchMenu, loading } = useFetchMenu()
   const { wallet, loading: fetchingWallet } = useVendorWallet()
   const { closeStore, loading: closing } = useCloseStore()
   const { opeStore, loading: opeing } = useOpenStore()
+  const { ordersList, loading: fetchingTodaysOrders } = useFetchVendorTodaysOrder()
   definePageMeta({
       layout: 'dashboard'
   })

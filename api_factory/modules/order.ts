@@ -22,5 +22,9 @@ export const order_api = {
   $_get_vendor_todays_order: () => {
     let url = `/orders/today`;
     return GATEWAY_ENDPOINT.get(url);
+  },
+  $_update_order_status: (id: string, payload: any) => {
+    let url = `/orders/${id}`;
+    return GATEWAY_ENDPOINT.patch(url, payload);
   }
 };
