@@ -469,7 +469,7 @@
                   </div>
                 </div>
 
-                <div>
+                <!-- <div>
                   <label class="block text-gray-700 font-medium mb-2">Image</label>
                   <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:border-orange-500 transition-colors duration-200">
                     <div v-if="formData.image" class="mb-4">
@@ -498,7 +498,46 @@
                       {{ formData.image ? 'Change Image' : 'Choose File' }}
                     </button>
                   </div>
-                </div>
+                </div> -->
+
+                <div>
+        <label class="block text-gray-700 font-medium mb-2">Image</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:border-orange-500 transition-colors duration-200">
+          <div v-if="formData.image" class="mb-4">
+            <img
+              :src="formData.image"
+              alt="Preview"
+              class="h-40 mx-auto object-contain rounded-md"
+            />
+          </div>
+          <div v-else-if="!uploading" class="py-8">
+            <Upload class="w-12 h-12 mx-auto text-gray-400 mb-2" />
+            <p class="text-gray-500">Drag and drop or click to upload</p>
+          </div>
+          <div v-else class="py-8 flex flex-col items-center">
+            <svg class="animate-spin h-12 w-12 text-orange-500 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-600">Uploading image...</p>
+          </div>
+          <input
+            type="file"
+            class="hidden"
+            ref="fileInput"
+            accept="image/*"
+            @change="handleFileUpload"
+          />
+          <button
+            type="button"
+            @click="$refs.fileInput.click()"
+            class="mt-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors duration-200"
+            :disabled="isUploading"
+          >
+            {{ formData.image ? 'Change Image' : 'Choose File' }}
+          </button>
+        </div>
+      </div>
 
                 <div class="flex justify-center w-full space-x-4 pt-4">
                   <button
@@ -720,6 +759,7 @@ import { useEditMenu } from '@/composables/modules/menu/useEditMenu'
 import { useDeleteMenu } from '@/composables/modules/menu/useDeleteMenu'
 import { useEnableMenu } from '@/composables/modules/menu/useEnableMenu'
 import { useDisableMenu } from '@/composables/modules/menu/useDisableMenu'
+import { useUploadFile } from '@/composables/core/useUpload'
 import defaultMeal from '@/assets/img/meal.jpg'
 
 const { createMenu, loading: creating } = useCreateMenu()
@@ -729,6 +769,7 @@ const { deleteMenu, loading: deleting } = useDeleteMenu()
 const { enableMenu, loading: enabling } = useEnableMenu()
 const { disableMenu, loading: disabling } = useDisableMenu()
 const { categories,  loading: fetching } = useFetchCategory()
+const {  uploadFile, loading: uploading } = useUploadFile()
 
 // Types
 interface Meal {
@@ -933,21 +974,50 @@ async function confirmToggleVisibility() {
   closeToggleModal();
 }
 
-function handleFileUpload(event: Event) {
+async function handleFileUpload(event: Event) {
   const input = event.target as HTMLInputElement;
-  if (!input.files || input.files?.length === 0) return;
+  if (!input.files || input.files.length === 0) return;
   
   const file = input.files[0];
   fileName.value = file.name;
   
-  // In a real app, you would upload the file to a server
-  // For this demo, we'll create a data URL
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    formData.value.image = e.target?.result as string;
-  };
-  reader.readAsDataURL(file);
+  // Set uploading state to true to show spinner
+  uploading.value = true;
+  
+  try {
+    // Call the uploadFile method from your composable
+    const fileUrl = await uploadFile(file);
+    
+    // Set the returned URL to the form data
+    formData.value.image = fileUrl;
+    
+    // Show success toast
+    showToast('Image uploaded successfully', 'success');
+  } catch (error) {
+    // Handle upload error
+    showToast(`Failed to upload image: ${error}`, 'error');
+    console.error('Upload error:', error);
+  } finally {
+    // Reset uploading state
+    uploading.value = false;
+  }
 }
+
+// function handleFileUpload(event: Event) {
+//   const input = event.target as HTMLInputElement;
+//   if (!input.files || input.files?.length === 0) return;
+  
+//   const file = input.files[0];
+//   fileName.value = file.name;
+  
+//   // In a real app, you would upload the file to a server
+//   // For this demo, we'll create a data URL
+//   const reader = new FileReader();
+//   reader.onload = (e) => {
+//     formData.value.image = e.target?.result as string;
+//   };
+//   reader.readAsDataURL(file);
+// }
 
 function handlePriceInput(event: Event) {
   const input = event.target as HTMLInputElement;
@@ -973,7 +1043,7 @@ async function submitForm() {
         name: formData.value.name,
         price: formData.value.price,
         category_id: formData.value.category,
-        // image: formData.value.image
+        image: formData.value.image
       }
       // Update existing meal
       await editMenu(formData.value.id, updatePayload);
@@ -997,7 +1067,7 @@ async function submitForm() {
         name: formData.value.name,
         price: formData.value.price,
         categoryId: formData.value.category,
-        // image: formData.value.image || `/placeholder.svg?height=200&width=200&text=${encodeURIComponent(formData.value.name)}`
+        image: formData.value.image || `/placeholder.svg?height=200&width=200&text=${encodeURIComponent(formData.value.name)}`
       });
       
       // Add to local state after API call succeeds
@@ -1075,6 +1145,7 @@ function formatPrice(price: number): string {
 watch([searchQuery, perPage], () => {
   currentPage.value = 1;
 });
+
 
 definePageMeta({
     layout: 'dashboard'

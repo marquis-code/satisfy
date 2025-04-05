@@ -12,10 +12,10 @@ export const useFetchVendorsOrder = () => {
 
     try {
       const res = (await order_api.$_fetch_vendor_orders()) as any
-      console.log(res.data.data, 'res here again')
+      console.log(res.data, 'res here again')
       if (res.type !== "ERROR") {
-        orders.value = res.data.data
-        return res.data.data
+        orders.value = res.data.orders
+        return res.data.orders
       } else {
         error.value = res.message || "Failed to fetch orders"
       }
