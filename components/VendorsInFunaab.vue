@@ -1,7 +1,7 @@
 <template>
   <section class="my-10">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-xl font-semibold">Vendors in FUNAAB</h2>
+      <h2 class="text-xl font-semibold">All Vendors</h2>
       <a href="#" class="text-red-700 hover:text-red-800 flex items-center transition-colors duration-300">
         View all
         <ChevronRight size="20" />
@@ -13,7 +13,7 @@
         v-model="searchQuery" 
         type="text" 
         placeholder="Search food or vendor" 
-        class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+        class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
         @input="handleSearch"
       />
       <Search 
@@ -57,7 +57,7 @@
             v-for="vendor in filteredVendors" 
             :key="vendor._id"
             @click="router.push(`/vendors/${vendor._id}`)"
-            class="bg-white border border-gray-200 cursor-pointer rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
+            class="bg-white border border-gray-200 cursor-pointer rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
           >
             <div class="relative">
               <img :src="getVendorImage(vendor.category)" :alt="vendor.restaurantName" class="w-full h-48 object-cover" />
@@ -84,7 +84,7 @@
               
               <div class="mt-4 flex justify-between items-center">
                 <a href="#" class="text-sm text-red-700 hover:text-red-800 font-medium">View Menu</a>
-                <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm transition-colors duration-300">
+                <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-xl text-sm transition-colors duration-300">
                   Order Now
                 </button>
               </div>
@@ -109,7 +109,7 @@
                 v-for="vendor in suggestedVendors" 
                 :key="vendor._id" 
                  @click="router.push(`/vendors/${vendor._id}`)"
-                class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
+                class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
               >
                 <div class="relative">
                   <img :src="getVendorImage(vendor.category)" :alt="vendor.restaurantName" class="w-full h-32 object-cover" />
@@ -141,7 +141,7 @@
         v-for="vendor in vendors" 
         :key="vendor._id"
         @click="router.push(`/vendors/${vendor._id}`)"
-        class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
+        class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
       >
         <div class="relative">
           <img :src="getVendorImage(vendor.category)" :alt="vendor.restaurantName" class="w-full h-48 object-cover" />
@@ -168,7 +168,7 @@
           
           <div class="mt-4 flex justify-between items-center">
             <a href="#" class="text-sm text-red-700 hover:text-red-800 font-medium">View Menu</a>
-            <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm transition-colors duration-300">
+            <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-xl text-sm transition-colors duration-300">
               Order Now
             </button>
           </div>
@@ -200,11 +200,11 @@ interface Vendor {
 }
 
 
-const { vendors, loading } = useFetchVendors();
+const { vendors, loading: isLoading } = useFetchVendors();
 
 const searchQuery = ref('');
 const isSearching = ref(false);
-const isLoading = ref(false);
+// const isLoading = ref(false);
 const searchTimeout = ref<number | null>(null);
 const favoriteVendors = reactive<Record<string, boolean>>({});
 

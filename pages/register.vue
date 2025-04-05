@@ -42,7 +42,7 @@
         <div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden">
           <div class="flex flex-col md:flex-row">
             <!-- Left Side - Progress & Info -->
-            <div class="w-full md:w-1/3 bg-gradient-to-b from-primary to-primary-dark text-white p-8">
+            <div class="w-full md:w-1/3 hidden lg:block bg-gradient-to-b from-primary to-primary-dark text-white p-8">
               <div class="h-full flex flex-col">
                 <h2 class="text-2xl font-display font-bold mb-6 animate-fade-in">Create Your Account</h2>
                 

@@ -10,7 +10,8 @@ export const useFetchVendorById = () => {
   const fetchVendorById = async () => {
     loading.value = true
     error.value = null
-    const id = route.params.id as string
+    const user = JSON.parse(localStorage.getItem('user'))
+    const id = route?.params?.id || user._id  as string
 
     try {
       const res = (await vendor_api.$_fetch_vendor_by_id(id)) as any

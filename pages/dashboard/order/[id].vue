@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="container mx-auto">
     <div class="bg-white rounded-xl shadow-lg p-6 mb-6 print:shadow-none transform transition-all duration-300 hover:shadow-xl">
       <!-- Header with back button and print button -->
       <div class="flex justify-between items-center mb-6 print:hidden">
@@ -13,7 +13,7 @@
         
         <button 
           @click="printOrder" 
-          class="flex items-center bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow hover:shadow-md transform hover:-translate-y-0.5"
+          class="flex items-center bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl transition-all duration-200 shadow hover:shadow-md transform hover:-translate-y-0.5"
         >
           <PrinterIcon class="h-5 w-5 mr-2" />
           Print Order
@@ -25,7 +25,7 @@
         <div class="flex items-center justify-between">
           <h1 class="text-2xl font-bold text-gray-800">Order Details</h1>
           <div 
-            class="animate-pulse-slow absolute top-0 right-0 px-3 py-1 rounded-full text-sm font-medium"
+            class="animate-pulse-slow px-3 py-1 rounded-full text-sm font-medium"
             :class="{
               'bg-green-100 text-green-800': order?.status === 'accepted',
               'bg-red-100 text-red-800': order?.status === 'rejected',
@@ -35,7 +35,7 @@
             {{ order?.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending' }}
           </div>
         </div>
-        <p class="text-gray-600 mt-1">Order ID: <span class="font-medium">{{ order?.id }}</span></p>
+        <p class="text-gray-600 mt-1">Order ID: <span class="font-medium">{{ order?.orderId }}</span></p>
       </div>
       
       <!-- Order info grid with improved cards -->
@@ -45,18 +45,22 @@
             <UserIcon class="h-5 w-5 mr-2 text-orange-500" />
             Customer Information
           </h2>
-          <div class="bg-gray-50 p-5 rounded-lg border border-gray-100 shadow-sm">
+          <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-sm">
             <p class="text-gray-700 mb-2 flex items-center">
-              <span class="font-medium w-20">Name:</span> 
-              <span class="text-gray-900">{{ order?.customer }}</span>
+              <span class="font-medium w-24">Name:</span> 
+              <span class="text-gray-900">{{ order?.customerName }}</span>
             </p>
             <p class="text-gray-700 mb-2 flex items-center">
-              <span class="font-medium w-20">Phone:</span> 
-              <span class="text-gray-900">{{ order?.customerPhone || '+234 812 345 6789' }}</span>
+              <span class="font-medium w-24">Phone:</span> 
+              <span class="text-gray-900">{{ order?.phoneNumber }}</span>
             </p>
-            <p class="text-gray-700 flex items-center">
-              <span class="font-medium w-20">Email:</span> 
-              <span class="text-gray-900">{{ order?.customerEmail || 'customer@example.com' }}</span>
+            <p class="text-gray-700 mb-2 flex items-center">
+              <span class="font-medium w-24">Location:</span> 
+              <span class="text-gray-900">{{ order?.location }}</span>
+            </p>
+            <p v-if="order?.address" class="text-gray-700 flex items-center">
+              <span class="font-medium w-24">Address:</span> 
+              <span class="text-gray-900">{{ order.address }}</span>
             </p>
           </div>
         </div>
@@ -66,13 +70,13 @@
             <ShoppingBagIcon class="h-5 w-5 mr-2 text-orange-500" />
             Order Information
           </h2>
-          <div class="bg-gray-50 p-5 rounded-lg border border-gray-100 shadow-sm">
+          <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 shadow-sm">
             <p class="text-gray-700 mb-2 flex items-center">
-              <span class="font-medium w-20">Date:</span> 
-              <span class="text-gray-900">{{ formatDate(order?.dateAdded || '') }}</span>
+              <span class="font-medium w-24">Date:</span> 
+              <span class="text-gray-900">{{ formatDate(order?.createdAt || '') }}</span>
             </p>
-            <p class="text-gray-700 mb-2 flex items-center">
-              <span class="font-medium w-20">Status:</span> 
+            <!-- <p class="text-gray-700 mb-2 flex items-center">
+              <span class="font-medium w-24">Status:</span> 
               <span 
                 :class="{
                   'text-green-600': order?.status === 'accepted',
@@ -83,82 +87,126 @@
               >
                 {{ order?.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending' }}
               </span>
+            </p> -->
+            <p class="text-gray-700 mb-2 flex items-center">
+              <span class="font-medium w-24">Delivery:</span> 
+              <span class="text-gray-900 capitalize">{{ order?.deliveryType || 'N/A' }}</span>
             </p>
             <p class="text-gray-700 flex items-center">
-              <span class="font-medium w-20">Location:</span> 
-              <span class="text-gray-900">{{ order?.location }}</span>
+              <span class="font-medium w-24">Total:</span> 
+              <span class="text-orange-600 font-bold">₦{{ formatPrice(order?.totalAmount || 0) }}</span>
             </p>
           </div>
         </div>
       </div>
       
-      <!-- Order items with improved table -->
-      <div class="mb-8 animate-fade-in">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-          <ShoppingCartIcon class="h-5 w-5 mr-2 text-orange-500" />
-          Order Items
+      <!-- Notes section if available -->
+      <div v-if="order?.notes" class="mb-8 animate-fade-in">
+        <h2 class="text-lg font-semibold text-gray-800 mb-2 flex items-center">
+          <ClipboardIcon class="h-5 w-5 mr-2 text-orange-500" />
+          Additional Notes
         </h2>
-        <div class="overflow-x-auto rounded-lg border border-gray-100 shadow-sm">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Item
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Quantity
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Price
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Total
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr 
-                v-for="(item, index) in orderItems" 
-                :key="index" 
-                class="hover:bg-orange-50 transition-colors duration-150"
-                :style="{ animationDelay: `${index * 100}ms` }"
-                :class="'animate-slide-in'"
-              >
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {{ item.name }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <span class="inline-flex items-center justify-center bg-orange-100 text-orange-800 px-2.5 py-0.5 rounded-full">
-                    {{ item.quantity }}
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  ₦{{ formatPrice(item.price) }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  ₦{{ formatPrice(item.price * item.quantity) }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-100 shadow-sm">
+          <p class="text-gray-700 italic">{{ order.notes }}</p>
+        </div>
+      </div>
+      
+      <!-- Order packs with beautiful cards -->
+      <div class="mb-8">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <PackageIcon class="h-5 w-5 mr-2 text-orange-500" />
+          Order Packs
+        </h2>
+        
+        <div class="space-y-6">
+          <div 
+            v-for="(pack, packIndex) in order?.packs" 
+            :key="pack._id"
+            class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden transform transition-all duration-300 hover:shadow-md animate-fade-in"
+            :style="{ animationDelay: `${packIndex * 150}ms` }"
+          >
+            <div class="bg-orange-50 px-4 py-3 border-b border-orange-100 flex justify-between items-center">
+              <h3 class="font-medium text-orange-800 flex items-center">
+                <PackageIcon class="h-4 w-4 mr-2" />
+                Pack #{{ packIndex + 1 }}
+              </h3>
+              <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
+                Quantity: {{ pack.quantity }}
+              </span>
+            </div>
+            
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Item
+                    </th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Quantity
+                    </th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Price
+                    </th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Total
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr 
+                    v-for="(item, itemIndex) in pack.items" 
+                    :key="item._id"
+                    class="hover:bg-orange-50 transition-colors duration-150 animate-slide-in"
+                    :style="{ animationDelay: `${(packIndex * 150) + (itemIndex * 50)}ms` }"
+                  >
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {{ getItemName(item.menuItemId) }}
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                      <span class="inline-flex items-center justify-center bg-orange-100 text-orange-800 px-2.5 py-0.5 rounded-full">
+                        {{ item.quantity }}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                      ₦{{ formatPrice(item.price) }}
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                      ₦{{ formatPrice(item.price * item.quantity) }}
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot class="bg-gray-50">
+                  <tr>
+                    <td colspan="3" class="px-4 py-2 text-right text-sm font-medium text-gray-500">
+                      Pack Subtotal:
+                    </td>
+                    <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-orange-600">
+                      ₦{{ formatPrice(calculatePackTotal(pack)) }}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
       
       <!-- Order summary with improved styling -->
       <div class="flex justify-end animate-fade-in-up">
         <div class="w-full md:w-1/3">
-          <div class="bg-orange-50 p-5 rounded-lg border border-orange-100 shadow-sm">
+          <div class="bg-orange-50 p-5 rounded-xl border border-orange-100 shadow-sm">
             <div class="flex justify-between py-2">
               <span class="text-gray-600">Subtotal:</span>
-              <span class="text-gray-800 font-medium">₦{{ formatPrice(subtotal) }}</span>
+              <span class="text-gray-800 font-medium">₦{{ formatPrice(calculateSubtotal()) }}</span>
             </div>
             <div class="flex justify-between py-2">
               <span class="text-gray-600">Delivery Fee:</span>
-              <span class="text-gray-800 font-medium">₦{{ formatPrice(deliveryFee) }}</span>
+              <span class="text-gray-800 font-medium">₦{{ formatPrice(order?.charge || 0) }}</span>
             </div>
             <div class="flex justify-between py-3 border-t border-orange-200 mt-2">
               <span class="text-gray-800 font-semibold">Total:</span>
-              <span class="text-orange-600 font-bold text-xl">₦{{ formatPrice(order?.total || 0) }}</span>
+              <span class="text-orange-600 font-bold text-xl">₦{{ formatPrice(order?.totalAmount || 0) }}</span>
             </div>
           </div>
         </div>
@@ -166,7 +214,8 @@
     </div>
     
     <!-- Status update section with improved toggle -->
-    <div class="bg-white rounded-xl shadow-lg p-6 print:hidden transform transition-all duration-300 hover:shadow-xl animate-fade-in-up" style="animation-delay: 300ms">
+     <!-- {{order.status}} -->
+    <div v-if="order?.status === 'rejected'" class="bg-white rounded-xl shadow-lg p-6 print:hidden transform transition-all duration-300 hover:shadow-xl animate-fade-in-up" style="animation-delay: 300ms">
       <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
         <CheckCircleIcon class="h-5 w-5 mr-2 text-orange-500" />
         Update Order Status
@@ -200,10 +249,20 @@
       
       <div class="flex justify-center">
         <button 
-          @click="updateOrderStatus" 
-          class="px-6 py-3 bg-orange-500 border border-transparent rounded-lg text-base font-medium text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow hover:shadow-lg transform hover:-translate-y-0.5"
+          @click="handleUpdateOrderStatus" 
+          class="px-6 py-3 bg-orange-500 border border-transparent rounded-xl text-base font-medium text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow hover:shadow-lg transform hover:-translate-y-0.5"
+          :disabled="updating"
         >
-          Save Changes
+          <template v-if="updating">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Updating...
+          </template>
+          <template v-else>
+            Save Changes
+          </template>
         </button>
       </div>
     </div>
@@ -221,24 +280,39 @@ import {
   ShoppingCartIcon, 
   CheckCircleIcon,
   CheckIcon,
-  XIcon
+  XIcon,
+  PackageIcon,
+  ClipboardIcon
 } from 'lucide-vue-next'
+import { useUpdateOrderStatus } from '@/composables/modules/order/useUpdateOrderStatus'
 
+// Define the Order interface based on the provided structure
 interface Order {
-  id: string
-  customer: string
-  customerPhone?: string
-  customerEmail?: string
-  total: number
-  dateAdded: string
+  _id: string
+  orderId: string
+  vendorId: string
+  customerName: string
+  phoneNumber: string
   location: string
+  address: string
+  packs: Array<{
+    items: Array<{
+      menuItemId: string
+      quantity: number
+      price: number
+      _id: string
+    }>
+    quantity: number
+    _id: string
+  }>
+  totalAmount: number
+  charge: number
   status: 'accepted' | 'rejected' | 'pending'
-}
-
-interface OrderItem {
-  name: string
-  quantity: number
-  price: number
+  deliveryType: string
+  notes: string
+  createdAt: string
+  updatedAt: string
+  __v: number
 }
 
 // Router
@@ -247,74 +321,112 @@ const route = useRoute()
 
 // State
 const order = ref<Order | null>(null)
-const orderItems = ref<OrderItem[]>([])
 const orderStatus = ref(false)
-const deliveryFee = ref(500)
 
-// Computed
-const subtotal = computed(() => {
-  return orderItems.value.reduce((total, item) => total + (item.price * item.quantity), 0)
-})
+// Get the updateOrderStatus composable
+const { updateOrderStatus, loading: updating } = useUpdateOrderStatus()
+
+// Menu items mapping (in a real app, this would come from an API)
+const menuItems = ref<Record<string, string>>({})
 
 // Methods
-const loadOrderDetails = async () => {
+const loadOrderDetails = () => {
   try {
-    const orderId = route.params.id as string
+    // Get order from local storage
+    const orderData = localStorage.getItem('order')
     
-    // In a real app, this would be an API call
-    // For demo purposes, we'll use mock data
-    const mockOrder: Order = {
-      id: orderId,
-      customer: 'Bukaz',
-      customerPhone: '+234 812 345 6789',
-      customerEmail: 'bukaz@example.com',
-      total: 4210.00,
-      dateAdded: '2025-04-04',
-      location: 'Oluwo',
-      status: 'pending'
+    if (orderData) {
+      const parsedOrder: Order = JSON.parse(orderData)
+      order.value = parsedOrder
+      
+      // Set order status based on the order data
+      orderStatus.value = parsedOrder.status === 'accepted'
+      
+      // In a real app, you would fetch menu item names from an API
+      // For now, we'll create a mapping with mock names
+      const itemIds = new Set<string>()
+      parsedOrder.packs.forEach(pack => {
+        pack.items.forEach(item => {
+          itemIds.add(item.menuItemId)
+        })
+      })
+      
+      // Create mock menu item names
+      const mockMenuItems: Record<string, string> = {}
+      const foodNames = [
+        'Jollof Rice', 'Fried Rice', 'Chicken Suya', 'Egusi Soup', 
+        'Pounded Yam', 'Moin Moin', 'Pepper Soup', 'Suya', 
+        'Akara', 'Puff Puff', 'Chin Chin', 'Dodo', 
+        'Efo Riro', 'Ogbono Soup', 'Banga Soup', 'Afang Soup'
+      ]
+      
+      let index = 0
+      itemIds.forEach(id => {
+        mockMenuItems[id] = foodNames[index % foodNames.length]
+        index++
+      })
+      
+      menuItems.value = mockMenuItems
     }
-    
-    // Mock order items
-    const mockOrderItems: OrderItem[] = [
-      { name: 'Jollof Rice with Chicken', quantity: 2, price: 1500 },
-      { name: 'Fried Rice', quantity: 1, price: 1200 },
-      { name: 'Pepsi (50cl)', quantity: 2, price: 250 },
-    ]
-    
-    order.value = mockOrder
-    orderItems.value = mockOrderItems
-    orderStatus.value = mockOrder.status === 'accepted'
-    
   } catch (error) {
     console.error('Failed to load order details:', error)
   }
 }
 
-const formatPrice = (price: number) => {
+const getItemName = (menuItemId: string): string => {
+  return menuItems.value[menuItemId] || `Item ${menuItemId.substring(menuItemId.length - 5)}`
+}
+
+const calculatePackTotal = (pack: Order['packs'][0]): number => {
+  return pack.items.reduce((total, item) => total + (item.price * item.quantity), 0) * pack.quantity
+}
+
+const calculateSubtotal = (): number => {
+  if (!order.value) return 0
+  
+  return order.value.packs.reduce((total, pack) => {
+    return total + calculatePackTotal(pack)
+  }, 0)
+}
+
+const formatPrice = (price: number): string => {
   return price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-const formatDate = (dateString: string) => {
+const formatDate = (dateString: string): string => {
   if (!dateString) return ''
   const date = new Date(dateString)
-  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(date)
 }
 
-const printOrder = () => {
+const printOrder = (): void => {
   window.print()
 }
 
-const updateOrderStatus = async () => {
+const handleUpdateOrderStatus = async (): Promise<void> => {
   if (!order.value) return
   
   try {
-    // In a real app, this would be an API call
-    console.log(`Updating order ${order.value.id} status to ${orderStatus.value ? 'accepted' : 'rejected'}`)
+    // Call the updateOrderStatus method from the composable
+    await updateOrderStatus(order.value._id, {
+      // id: order.value._id,
+      status: orderStatus.value ? 'accepted' : 'rejected'
+    })
     
-    // Update the order in our local state
-    order.value.status = orderStatus.value ? 'accepted' : 'rejected'
+    // Update the order in local storage to maintain consistency
+    if (order.value) {
+      order.value.status = orderStatus.value ? 'accepted' : 'rejected'
+      localStorage.setItem('order', JSON.stringify(order.value))
+    }
     
-    // Show success notification (in a real app)
+    // Refresh the page to get the updated data
+    window.location.reload()
   } catch (error) {
     console.error('Failed to update order status:', error)
     // Show error notification (in a real app)

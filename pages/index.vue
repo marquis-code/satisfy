@@ -3,7 +3,7 @@
     <WelcomeOverlay />
     <!-- <Header /> -->
     <!-- Food Particles Background -->
-    <div class="fixed inset-0 pointer-events-none z-0">
+    <!-- <div class="fixed inset-0 pointer-events-none z-0">
       <div v-for="i in 12" :key="i" 
         class="absolute food-particle"
         :class="`food-${(i % 6) + 1}`"
@@ -14,11 +14,11 @@
           animationDuration: `${15 + Math.random() * 15}s`
         }"
       ></div>
-    </div>
+    </div> -->
     
-    <!-- Main Content -->
+
     <div class="relative z-10 min-h-screen flex flex-col">
-      <!-- Header -->
+
       <header class="py-6 px-6 md:px-10 bg-white shadow-sm">
         <div class="container mx-auto flex justify-between items-center">
           <div class="flex items-center">
@@ -36,10 +36,10 @@
       <FoodBannerCarousel />
      </div>
       
-      <!-- Hero Section -->
+<!-- 
       <div class="flex-1 flex flex-col items-center justify-center px-6 py-10 md:py-0">
         <div class="container px-4 w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-          <!-- Left Column - Text Content -->
+
           <div class="flex flex-col justify-center order-2 lg:order-1 animate-fade-in">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-gray-800 mb-6 animate-slide-up">
               <span class="text-primary">Delicious</span> food,<br />
@@ -69,7 +69,7 @@
               </button>
             </div>
             
-            <!-- Features -->
+
             <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in animation-delay-600">
               <div class="p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
                 <div class="p-3 rounded-full inline-flex items-center justify-center mb-3 bg-primary/10">
@@ -97,18 +97,12 @@
             </div>
           </div>
           
-          <!-- Right Column - Animated Illustration -->
+
           <div class="flex items-center justify-center order-1 lg:order-2">
             <div class="relative w-full max-w-md">
-              <!-- Main Phone -->
+
               <div class="relative z-20 animate-float animation-delay-300">
-                <!-- <img 
-                  src="@/assets/img/mockup.png" 
-                  alt="CTTaste App" 
-                  class="w-full h-auto drop-shadow-2xl"
-                />
-                 -->
-                <!-- Animated Screen Content -->
+
                 <div class="absolute inset-0 flex flex-col items-center justify-center p-10">
                   <div class="w-full space-y-3 animate-pulse-slow">
                     <div class="h-2 bg-gray-200 rounded-full w-3/4 mx-auto"></div>
@@ -118,26 +112,22 @@
                 </div>
               </div>
               
-              <!-- Floating Food Items -->
+
               <div class="absolute top-0 -right-16 z-10 animate-float animation-delay-100">
-                <!-- <img src="@/assets/img/food1.jpg" alt="Burger" class="w-32 h-32 object-contain rounded-xl drop-shadow-lg" /> -->
               </div>
               
               <div class="absolute bottom-20 -left-16 z-10 animate-float animation-delay-500">
-                <!-- <img src="@/assets/img/food2.jpg" alt="Pizza" class="w-36 h-36 object-contain rounded-xl drop-shadow-lg" /> -->
               </div>
               
               <div class="absolute top-1/4 -left-12 z-10 animate-float animation-delay-700">
-                <!-- <img src="@/assets/img/food3.jpg" alt="Salad" class="w-28 h-28 object-contain rounded-xl drop-shadow-lg" /> -->
               </div>
-              
-              <!-- Decorative Elements -->
+          
               <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary/20 rounded-full filter blur-xl animate-pulse-slow"></div>
               <div class="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 rounded-full filter blur-xl animate-pulse-slow animation-delay-500"></div>
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <main class="container mx-auto px-4 pb-10">
         <!-- {{vendors}} -->

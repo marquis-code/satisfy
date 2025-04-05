@@ -1,18 +1,20 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="container mx-auto">
     <!-- Header with animated counter -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-3 mb-2">
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-3 mb-2">
         <ClipboardListIcon class="h-8 w-8 text-emerald-600" />
         <span>Orders Dashboard</span>
       </h1>
       <div class="flex items-center">
         <span class="text-lg text-gray-600">Total Orders:</span>
         <div class="ml-2 bg-emerald-100 text-emerald-800 font-semibold px-3 py-1 rounded-full">
-          {{ totalOrders }}
+          {{ orders?.length }}
         </div>
       </div>
     </div>
+
+    <!-- {{orders}} -->
 
     <!-- Filters card -->
     <div class="bg-white rounded-xl shadow-md p-6 mb-8 transition-all duration-300 hover:shadow-lg">
@@ -133,7 +135,7 @@
                 Order ID
               </th>
               <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Customer
+                customerName
               </th>
               <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Total
@@ -161,19 +163,27 @@
               :style="{ animationDelay: `${index * 50}ms` }"
             >
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900">{{ order.id }}</div>
+                <div class="text-sm font-medium text-gray-900">{{ order.orderId }}</div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-800">{{ order.customer }}</div>
+                <div class="flex items-center">
+                  <div class="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold mr-3">
+                    {{ order.customerName.charAt(0) }}
+                  </div>
+                  <div class="text-sm font-medium text-gray-900">{{ order.customerName }}</div>
+                </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-semibold text-emerald-700">₦{{ formatPrice(order.total) }}</div>
+                <div class="text-sm font-semibold text-emerald-700">₦{{ formatPrice(order.totalAmount) }}</div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-600">{{ formatDate(order.dateAdded) }}</div>
+                <div class="text-sm text-gray-600">{{ formatDate(order.createdAt) }}</div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-600">{{ order.location }}</div>
+                <div class="flex items-center">
+                  <MapPinIcon class="h-4 w-4 text-gray-400 mr-1" />
+                  <div class="text-sm text-gray-600">{{ order.location }}</div>
+                </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <span 
@@ -274,11 +284,11 @@
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="showStatusModal = false"></div>
             
             <!-- Modal panel -->
-            <div class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full">
               <div class="bg-white px-6 pt-5 pb-6">
                 <div class="flex items-start justify-between mb-5">
                   <div>
-                    <h3 class="text-xl font-semibold text-gray-900" id="modal-title">Update Order Status</h3>
+                    <h3 class="text-lg font-semibold text-gray-900" id="modal-title">Update Order Status</h3>
                     <p class="mt-1 text-sm text-gray-500">Change the status of this order</p>
                   </div>
                   <button 
@@ -293,12 +303,12 @@
                   <div class="flex items-center mb-2">
                     <TagIcon class="h-5 w-5 text-gray-500 mr-2" />
                     <span class="text-sm font-medium text-gray-700">Order ID:</span>
-                    <span class="ml-2 text-sm text-gray-900 font-mono">{{ selectedOrder?.id }}</span>
+                    <span class="ml-2 text-sm text-gray-900 font-mono">{{ selectedOrder?.orderId }}</span>
                   </div>
                   <div class="flex items-center">
                     <UserIcon class="h-5 w-5 text-gray-500 mr-2" />
-                    <span class="text-sm font-medium text-gray-700">Customer:</span>
-                    <span class="ml-2 text-sm text-gray-900">{{ selectedOrder?.customer }}</span>
+                    <span class="text-sm font-medium text-gray-700">customerName:</span>
+                    <span class="ml-2 text-sm text-gray-900">{{ selectedOrder?.customerName }}</span>
                   </div>
                 </div>
                 
@@ -365,10 +375,11 @@
                   Cancel
                 </button>
                 <button 
-                  @click="updateOrderStatus" 
-                  class="px-4 py-2 bg-emerald-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none transition-colors duration-200"
+                  :disabled="updating"
+                  @click="handleUpdateOrderStatus" 
+                  class="px-4 py-2 bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-25 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none transition-colors duration-200"
                 >
-                  Save Changes
+                  {{ updating ? 'UPDATING...' : 'Save Changes'}}
                 </button>
               </div>
             </div>
@@ -394,15 +405,17 @@ import {
   ChevronLeftIcon, 
   ChevronRightIcon, 
   ClipboardListIcon,
+  MapPinIcon, 
   InboxIcon,
   TagIcon,
   UserIcon
 } from 'lucide-vue-next'
 import { useFetchVendorsOrder } from '@/composables/modules/order/useFetchVendorOrders'
+import { useUpdateOrderStatus } from '@/composables/modules/order/useUpdateOrderStatus'
 
 interface Order {
-  id: string
-  customer: string
+  _id: string
+  customerName: string
   total: number
   dateAdded: string
   location: string
@@ -410,6 +423,7 @@ interface Order {
 }
 
 const { orders, loading } = useFetchVendorsOrder()
+const { updateOrderStatus, loading: updating } =  useUpdateOrderStatus()
 
 interface DateRange {
   from: string
@@ -482,7 +496,7 @@ const applyFilters = () => {
     const query = searchQuery.value.toLowerCase()
     filteredOrders = filteredOrders.filter(order => 
       order.id.toLowerCase().includes(query) ||
-      order.customer.toLowerCase().includes(query) ||
+      order.customerName.toLowerCase().includes(query) ||
       order.location.toLowerCase().includes(query)
     )
   }
@@ -525,12 +539,12 @@ const debounceSearch = (() => {
 })()
 
 const sortOrders = () => {
-  allOrders.value.sort((a, b) => a.customer.localeCompare(b.customer))
+  allOrders.value.sort((a, b) => a.customerName.localeCompare(b.customerName))
   applyFilters()
 }
 
 const formatPrice = (price: number) => {
-  return price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return price?.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
 const formatDate = (dateString: string) => {
@@ -539,7 +553,8 @@ const formatDate = (dateString: string) => {
 }
 
 const viewOrder = (order: Order) => {
-  router.push(`/dashboard/order/${order.id}`)
+  localStorage.setItem('order', JSON.stringify(order))
+  router.push(`/dashboard/order/${order._id}`)
 }
 
 const openStatusModal = (order: Order) => {
@@ -548,20 +563,23 @@ const openStatusModal = (order: Order) => {
   showStatusModal.value = true
 }
 
-const updateOrderStatus = async () => {
+const handleUpdateOrderStatus = async () => {
   if (!selectedOrder.value) return
   
   try {
-    // In a real app, this would be an API call
-    console.log(`Updating order ${selectedOrder.value.id} status to ${orderStatus.value ? 'accepted' : 'rejected'}`)
+    // Call the updateOrderStatus method from the composable
+    // The loading state is tracked by the 'updating' ref from the composable
+    await updateOrderStatus(selectedOrder.value._id,{
+      status: orderStatus.value ? 'accepted' : 'rejected'
+    })
     
-    // Update the order in our local state
-    const orderIndex = allOrders.value.findIndex(o => o.id === selectedOrder.value?.id)
+    // Update the order in our local state to maintain UI consistency
+    const orderIndex = allOrders.value.findIndex(o => o._id === selectedOrder.value?._id)
     if (orderIndex !== -1) {
       allOrders.value[orderIndex].status = orderStatus.value ? 'accepted' : 'rejected'
       
       // Also update in the current page if present
-      const pageOrderIndex = orders.value.findIndex(o => o.id === selectedOrder.value?.id)
+      const pageOrderIndex = orders.value.findIndex(o => o._id === selectedOrder.value?._id)
       if (pageOrderIndex !== -1) {
         orders.value[pageOrderIndex].status = orderStatus.value ? 'accepted' : 'rejected'
       }
@@ -570,12 +588,51 @@ const updateOrderStatus = async () => {
     // Close the modal
     showStatusModal.value = false
     
-    // Show success notification (in a real app)
+    // Refresh the data
+    // Option 1: Using Nuxt's refreshNuxtData
+    await refreshNuxtData('orders')
+    
+    // Option 2: If you're using useFetch or useAsyncData with a key
+    // await refresh('orders')
+    
+    // Show success notification
+    // Example with useToast (if you have a toast system)
+    // toast.success('Order status updated successfully')
   } catch (error) {
     console.error('Failed to update order status:', error)
-    // Show error notification (in a real app)
+    // Show error notification
+    // toast.error('Failed to update order status')
   }
 }
+
+// const handleUpdateOrderStatus = async () => {
+//   if (!selectedOrder.value) return
+  
+//   try {
+//     // In a real app, this would be an API call
+//     console.log(`Updating order ${selectedOrder.value.id} status to ${orderStatus.value ? 'accepted' : 'rejected'}`)
+    
+//     // Update the order in our local state
+//     const orderIndex = allOrders.value.findIndex(o => o.id === selectedOrder.value?.id)
+//     if (orderIndex !== -1) {
+//       allOrders.value[orderIndex].status = orderStatus.value ? 'accepted' : 'rejected'
+      
+//       // Also update in the current page if present
+//       const pageOrderIndex = orders.value.findIndex(o => o.id === selectedOrder.value?.id)
+//       if (pageOrderIndex !== -1) {
+//         orders.value[pageOrderIndex].status = orderStatus.value ? 'accepted' : 'rejected'
+//       }
+//     }
+    
+//     // Close the modal
+//     showStatusModal.value = false
+    
+//     // Show success notification (in a real app)
+//   } catch (error) {
+//     console.error('Failed to update order status:', error)
+//     // Show error notification (in a real app)
+//   }
+// }
 
 // Watchers
 watch([perPage, dateRange], () => {
