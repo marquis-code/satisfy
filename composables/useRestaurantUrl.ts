@@ -16,7 +16,7 @@ export function useRestaurantUrl(baseUrl?: string) {
    * - Removes special characters
    * - Converts to title case with first letter of each word capitalized
    */
-  const formatRestaurantNameForUrl = (name: string): string => {
+  const formatRestaurantNameForUrl = (name: string, vendor: any): string => {
     if (!name) return ''
     
     // Convert to title case (capitalize first letter of each word)
@@ -33,32 +33,34 @@ export function useRestaurantUrl(baseUrl?: string) {
   }
   
   /**
-   * Generates a full restaurant URL from a restaurant name
+   * Generates a full restaurant URL from a restaurant name and vendor object
    */
-  const getRestaurantUrl = (restaurantName: string): string => {
-    const formattedName = formatRestaurantNameForUrl(restaurantName)
-    return `${siteUrl.value}/${formattedName}`
+  const getRestaurantUrl = (restaurantName: string, vendor: any): string => {
+    // Use vendor ID directly rather than the formatted name
+    if (!vendor || !vendor._id) {
+      console.error('Vendor or vendor ID is missing')
+      return `${siteUrl.value}`
+    }
+    
+    return `${siteUrl.value}/vendors/${vendor._id}`
   }
   
   /**
-   * Extracts a restaurant name from a URL
+   * Extracts a vendor ID from a URL
    */
-  const getRestaurantNameFromUrl = (url: string): string => {
+  const getVendorIdFromUrl = (url: string): string => {
     const urlObj = new URL(url)
     const path = urlObj.pathname
     
-    // Get the last part of the path (the restaurant name)
-    const formattedName = path.split('/').filter(Boolean).pop() || ''
-    
-    // Convert hyphens back to spaces
-    return formattedName.replace(/-/g, ' ')
+    // Get the last part of the path (the vendor ID)
+    return path.split('/').filter(Boolean).pop() || ''
   }
   
   /**
    * Creates a shareable URL for the current restaurant
    */
-  const createShareableUrl = (restaurantName: string, params?: Record<string, string>): string => {
-    const baseRestaurantUrl = getRestaurantUrl(restaurantName)
+  const createShareableUrl = (restaurantName: string, vendor: any, params?: Record<string, string>): string => {
+    const baseRestaurantUrl = getRestaurantUrl(restaurantName, vendor)
     
     if (!params) return baseRestaurantUrl
     
@@ -77,7 +79,12 @@ export function useRestaurantUrl(baseUrl?: string) {
   const isValidRestaurantUrl = (url: string): boolean => {
     try {
       const urlObj = new URL(url)
-      return urlObj.origin === siteUrl.value && urlObj.pathname.split('/').filter(Boolean).length > 0
+      const pathParts = urlObj.pathname.split('/').filter(Boolean)
+      // Check if URL has the format /vendors/{vendorId}
+      return urlObj.origin === siteUrl.value && 
+             pathParts.length >= 2 && 
+             pathParts[0] === 'vendors' &&
+             pathParts[1].length > 0
     } catch (e) {
       return false
     }
@@ -87,7 +94,7 @@ export function useRestaurantUrl(baseUrl?: string) {
     siteUrl,
     formatRestaurantNameForUrl,
     getRestaurantUrl,
-    getRestaurantNameFromUrl,
+    getVendorIdFromUrl,
     createShareableUrl,
     isValidRestaurantUrl
   }

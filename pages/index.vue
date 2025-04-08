@@ -22,7 +22,7 @@
       <header class="py-6 px-6 md:px-10 bg-white shadow-sm">
         <div class="container mx-auto flex justify-between items-center">
           <div class="flex items-center">
-            <img src="@/assets/img/satisfy-logo-coloured.png" alt="CTTaste" class="h-10 animate-bounce-subtle" />
+            <img src="@/assets/img/satisfy-logo-coloured.png" alt="Satisfy" class="h-10 animate-bounce-subtle" />
           </div>
           <div class="flex items-center space-x-4">
             <NuxtLink to="/login" class="text-gray-700 hover:text-primary transition-colors">
@@ -131,7 +131,7 @@
 
       <main class="container mx-auto px-4 pb-10">
         <!-- {{vendors}} -->
-      <PromotedVendors />
+      <!-- <PromotedVendors /> -->
       <VendorsInFunaab />
     </main>
       

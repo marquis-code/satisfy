@@ -57,17 +57,21 @@
             v-for="vendor in filteredVendors" 
             :key="vendor._id"
             @click="router.push(`/vendors/${vendor._id}`)"
-            class="bg-white border border-gray-200 cursor-pointer rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
+            class="bg-white cursor-pointer border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
           >
-            <div class="relative">
-              <img :src="getVendorImage(vendor.category)" :alt="vendor.restaurantName" class="w-full h-48 object-cover" />
+            <div class="relative cursor-pointer">
+              <img :src="vendor.displayImage" :alt="vendor.restaurantName" class="w-full h-48 cursor-pointer object-cover" />
               <div class="absolute top-2 right-2 flex space-x-2">
                 <button class="bg-white rounded-full p-1.5 shadow-sm transition-transform duration-300 hover:scale-110">
                   <Heart size="18" :class="favoriteVendors[vendor._id] ? 'text-red-500 fill-red-500' : 'text-gray-600'" @click="toggleFavorite(vendor._id)" />
                 </button>
               </div>
               <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                <span v-if="vendor.isStoreOpen" class="text-xs px-2 py-1 bg-green-500 text-white rounded-full">Open</span>
+                <!-- <span v-if="vendor.isStoreOpen" class="text-xs px-2 py-1 bg-green-500 text-white rounded-full">Open</span> -->
+                <div  v-if="vendor.isStoreOpen" class="absolute bottom-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded flex items-center">
+                  <CheckCircle size="14" class="mr-1" />
+                  Opensss
+                </div>
                 <span v-else class="text-xs px-2 py-1 bg-red-500 text-white rounded-full">Closed</span>
               </div>
             </div>
@@ -112,7 +116,7 @@
                 class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
               >
                 <div class="relative">
-                  <img :src="getVendorImage(vendor.category)" :alt="vendor.restaurantName" class="w-full h-32 object-cover" />
+                  <img :src="vendor?.displayImage" :alt="vendor.restaurantName" class="w-full h-32 object-cover" />
                   <div class="absolute top-2 right-2">
                     <button class="bg-white rounded-full p-1.5 shadow-sm transition-transform duration-300 hover:scale-110">
                       <Heart size="18" :class="favoriteVendors[vendor._id] ? 'text-red-500 fill-red-500' : 'text-gray-600'" @click="toggleFavorite(vendor._id)" />
@@ -144,14 +148,18 @@
         class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
       >
         <div class="relative">
-          <img :src="getVendorImage(vendor.category)" :alt="vendor.restaurantName" class="w-full h-48 object-cover" />
+          <img :src="vendor?.displayImage" :alt="vendor.restaurantName" class="w-full h-48 object-cover" />
           <div class="absolute top-2 right-2 flex space-x-2">
             <button class="bg-white rounded-full p-1.5 shadow-sm transition-transform duration-300 hover:scale-110">
               <Heart size="18" :class="favoriteVendors[vendor._id] ? 'text-red-500 fill-red-500' : 'text-gray-600'" @click="toggleFavorite(vendor._id)" />
             </button>
           </div>
           <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-            <span v-if="vendor.isStoreOpen" class="text-xs px-2 py-1 bg-green-500 text-white rounded-full">Open</span>
+            <!-- <span v-if="vendor.isStoreOpen" class="text-xs px-2 py-1 bg-green-500 text-white rounded-full">Open sss</span> -->
+            <div v-if="vendor.isStoreOpen" class="absolute bottom-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded flex items-center">
+              <CheckCircle size="14" class="mr-1" />
+              Open
+            </div>
             <span v-else class="text-xs px-2 py-1 bg-red-500 text-white rounded-full">Closed</span>
           </div>
         </div>
@@ -166,12 +174,12 @@
             <span class="ml-2 text-xs text-gray-500">{{ formatLocation(vendor.locationName) }}</span>
           </div>
           
-          <div class="mt-4 flex justify-between items-center">
+          <!-- <div class="mt-4 flex justify-between items-center">
             <a href="#" class="text-sm text-red-700 hover:text-red-800 font-medium">View Menu</a>
             <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-xl text-sm transition-colors duration-300">
               Order Now
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -180,7 +188,7 @@
 
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue';
-import { ChevronRight, Search, Heart, Pizza, Coffee } from 'lucide-vue-next';
+import { ChevronRight, Search, Heart, CheckCircle, Star, Pizza, Coffee } from 'lucide-vue-next';
 import { useFetchVendors } from '@/composables/modules/vendor/useFetchVendors'
 const router = useRouter()
 

@@ -16,9 +16,10 @@ export const useUploadFile = () => {
 
       // Make the API call with FormData
       const res = await $_upload(formData) as any
-
+       console.log(res, 'res here')
       if (res.type !== 'ERROR') {
-        uploadResponse.value = res.data ?? []
+        uploadResponse.value = res.data.data.url ?? ""
+        return res.data.data.url
       } else {
         throw new Error('Error in API response')
       }

@@ -1,13 +1,18 @@
 <template>
   <div>
     <!-- Mobile Hamburger Menu Button -->
-    <button 
+ <div class="mb-2">
+  <button 
       @click="isMobileMenuOpen = !isMobileMenuOpen"
-      class="fixed top-4 left-4 z-50 p-2 rounded-md bg-[#1e2530] text-white md:hidden hover:bg-[#2a3441] transition-colors"
+      class="fixed top-4 left-4 z-50 p-2 rounded-md  text-white mb-3 md:hidden transition-colors"
     >
-      <Menu v-if="!isMobileMenuOpen" size="24" class="animate-spin-slow" />
-      <X v-else size="24" class="animate-bounce-light" />
+      <!-- <Menu v-if="!isMobileMenuOpen" size="24" class="" /> -->
+<div class="flex justify-between items-center">
+  <svg  v-if="!isMobileMenuOpen" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg>
+  <X v-else size="24" class=" ml-[200px]" />
+</div>
     </button>
+ </div>
     
     <!-- Sidebar -->
     <div 

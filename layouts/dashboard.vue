@@ -4,18 +4,18 @@
     
     <div class="md:ml-64 transition-all duration-300">
       <header class="bg-white border-b border-gray-200 py-3 px-6 flex items-center justify-between sticky top-0 z-10">
-        <h1 class="text-xl font-semibold text-gray-700 ml-8 md:ml-0">WELCOME!</h1>
+        <h1 class="text-lg font-semibold text-gray-700 ml-10 md:ml-0">WELCOME!</h1>
         
         <div class="flex items-center space-x-4">
           <button class="p-1.5 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
             <MapPin size="20" />
           </button>
           
-          <button class="p-1.5 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
+          <!-- <button class="p-1.5 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
             <Sun size="20" />
-          </button>
+          </button> -->
           
-          <div class="relative">
+          <!-- <div class="relative">
             <button class="p-1.5 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
               <Bell size="20" />
               <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -23,7 +23,7 @@
               </span>
             </button>
           </div>
-          
+           -->
           <div class="flex items-center space-x-2">
             <div class="w-8 h-8 rounded-full overflow-hidden">
               <img 

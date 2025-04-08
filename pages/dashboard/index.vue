@@ -25,7 +25,7 @@
           </div>
           <div class="absolute bottom-0 left-0 right-0">
             <img 
-              src="@/assets/img/meal2.jpg" 
+              :src="vendor?.displayImage" 
               alt="Vendor" 
               class="w-full h-40 object-cover object-top"
             />
@@ -282,7 +282,7 @@ const { getRestaurantUrl } = useRestaurantUrl()
 
 // Computed URL based on restaurant name
 const restaurantUrl = computed(() => {
-  return getRestaurantUrl(user.value?.restaurantName || 'restaurant')
+  return getRestaurantUrl(user.value?.restaurantName, vendor.value)
 })
 
 // Initialize profile data with empty values

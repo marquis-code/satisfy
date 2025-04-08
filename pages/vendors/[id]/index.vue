@@ -243,7 +243,7 @@
             class="bg-white rounded-xl shadow-md p-6 sticky top-4 border border-gray-100"
           >
             <div class="flex justify-between items-center mb-6">
-              <h2 class="text-lg font-bold text-gray-800 flex items-center">
+              <h2 class="text-base font-bold text-gray-800 flex items-center">
                 <ShoppingBagIcon class="h-5 w-5 mr-2 text-orange-500" />
                 Your Orders
                 <span

@@ -27,7 +27,7 @@
       <header class="py-6 px-6 md:px-10 bg-white shadow-sm">
         <div class="container mx-auto flex justify-between items-center">
           <NuxtLink to="/" class="flex items-center">
-            <!-- <img src="/images/cttaste-logo.svg" alt="CTTaste" class="h-10" /> -->
+            <!-- <img src="/images/Satisfy-logo.svg" alt="Satisfy" class="h-10" /> -->
           </NuxtLink>
           <div class="flex items-center space-x-4">
             <NuxtLink to="/login" class="text-gray-700 hover:text-primary transition-colors">
@@ -91,7 +91,7 @@
                 
                 <!-- Benefits -->
                 <div class="mt-auto space-y-4 animate-fade-in animation-delay-500">
-                  <h3 class="text-lg font-semibold text-white/90">Why join CTTaste?</h3>
+                  <h3 class="text-lg font-semibold text-white/90">Why join Satisfy?</h3>
                   
                   <div class="flex items-start">
                     <div class="flex-shrink-0 w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center mr-3">
@@ -218,11 +218,11 @@
                     <div class="mt-2 p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                       <!-- Image Preview -->
                       <div v-if="form.displayImageUrl" class="mb-4 flex justify-center">
-                        <div class="relative">
+                        <div class="relative w-full">
                           <img 
                             :src="form.displayImageUrl" 
                             alt="Store Display" 
-                            class="w-40 h-40 object-cover rounded-lg shadow-md"
+                            class="w-full h-40 object-cover rounded-lg shadow-md"
                           />
                           <button 
                             type="button"
@@ -717,16 +717,16 @@
             <div class="p-4 md:p-6 overflow-y-auto max-h-[60vh]">
               <div class="prose prose-sm max-w-none">
                 <h4>1. Introduction</h4>
-                <p>Welcome to CTTaste! These Terms and Conditions govern your use of our platform and services.</p>
+                <p>Welcome to Satisfy! These Terms and Conditions govern your use of our platform and services.</p>
                 
                 <h4>2. Acceptance of Terms</h4>
-                <p>By accessing or using CTTaste, you agree to be bound by these Terms and Conditions.</p>
+                <p>By accessing or using Satisfy, you agree to be bound by these Terms and Conditions.</p>
                 
                 <h4>3. User Accounts</h4>
                 <p>You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.</p>
                 
                 <h4>4. Ordering and Payment</h4>
-                <p>All orders placed through CTTaste are subject to acceptance and availability. Payment must be made at the time of ordering.</p>
+                <p>All orders placed through Satisfy are subject to acceptance and availability. Payment must be made at the time of ordering.</p>
                 
                 <h4>5. Delivery</h4>
                 <p>Delivery times are estimates and may vary based on various factors including location, traffic, and weather conditions.</p>
@@ -900,15 +900,145 @@ const steps = [
 ];
 
 // Sample schools list
+// Comprehensive list of Nigerian universities
 const schools = [
+  // Federal Universities
   'Federal University of Technology, Akure (FUTA)',
   'Obafemi Awolowo University (OAU)',
   'University of Ibadan (UI)',
   'University of Lagos (UNILAG)',
   'University of Benin (UNIBEN)',
+  'Ahmadu Bello University (ABU)',
+  'Bayero University Kano (BUK)',
+  'Federal University of Agriculture, Abeokuta (FUNAAB)',
+  'Federal University Oye-Ekiti (FUOYE)',
+  'Federal University of Technology, Minna (FUTMINNA)',
+  'Federal University of Technology, Owerri (FUTO)',
+  'Federal University, Dutse (FUD)',
+  'Federal University, Lafia (FULAFIA)',
+  'Federal University, Lokoja (FULOKOJA)',
+  'Federal University, Otuoke (FUO)',
+  'Federal University, Wukari (FUWUKARI)',
+  'Michael Okpara University of Agriculture, Umudike (MOUAU)',
+  'Modibbo Adama University of Technology, Yola (MAUTECH)',
+  'National Open University of Nigeria (NOUN)',
+  'Nigeria Police Academy, Wudil',
+  'Nigerian Defence Academy (NDA)',
+  'Nnamdi Azikiwe University, Awka (UNIZIK)',
+  'University of Abuja (UNIABUJA)',
+  'University of Agriculture, Makurdi (UAM)',
+  'University of Calabar (UNICAL)',
+  'University of Ilorin (UNILORIN)',
+  'University of Jos (UNIJOS)',
+  'University of Maiduguri (UNIMAID)',
+  'University of Nigeria, Nsukka (UNN)',
+  'University of Port Harcourt (UNIPORT)',
+  'University of Uyo (UNIUYO)',
+  'Abubakar Tafawa Balewa University (ATBU)',
+  'Federal University Gashua (FUGASHUA)',
+  'Federal University Gusau (FUGUS)',
+  'Federal University Kashere (FUK)',
+  'Federal University Birnin Kebbi (FUBK)',
+  'Federal University Dustin-Ma (FUDMA)',
+  'Alex Ekwueme Federal University, Ndufu-Alike (AE-FUNAI)',
+  'Federal University of Petroleum Resources, Effurun (FUPRE)',
+  'Federal University of Health Sciences, Otukpo (FUHSO)',
+  
+  // State Universities
+  'Abia State University, Uturu (ABSU)',
+  'Adamawa State University, Mubi (ADSU)',
+  'Adekunle Ajasin University, Akungba (AAUA)',
+  'Akwa Ibom State University (AKSU)',
+  'Ambrose Alli University, Ekpoma (AAU)',
+  'Chukwuemeka Odumegwu Ojukwu University, Uli (COOU)',
+  'Bauchi State University, Gadau (BASUG)',
+  'Benue State University, Makurdi (BSU)',
+  'Yobe State University, Damaturu (YSU)',
+  'Cross River State University of Technology, Calabar (CRUTECH)',
+  'Delta State University, Abraka (DELSU)',
+  'Ebonyi State University, Abakaliki (EBSU)',
+  'Ekiti State University, Ado Ekiti (EKSU)',
+  'Enugu State University of Science and Technology (ESUT)',
+  'Gombe State University (GSU)',
+  'Ibrahim Badamasi Babangida University, Lapai (IBBUL)',
+  'Ignatius Ajuru University of Education, Port Harcourt (IAUE)',
+  'Imo State University, Owerri (IMSU)',
+  'Kaduna State University (KASU)',
+  'Kano University of Science and Technology, Wudil (KUST)',
+  'Kebbi State University of Science and Technology, Aliero (KSUSTA)',
+  'Kogi State University, Anyigba (KSU)',
+  'Kwara State University, Malete (KWASU)',
+  'Ladoke Akintola University of Technology, Ogbomoso (LAUTECH)',
+  'Lagos State University, Ojo (LASU)',
+  'Nasarawa State University, Keffi (NSUK)',
+  'Niger Delta University, Wilberforce Island (NDU)',
+  'Olabisi Onabanjo University, Ago-Iwoye (OOU)',
+  'Ondo State University of Science and Technology, Okitipupa (OSUSTECH)',
+  'Osun State University, Osogbo (UNIOSUN)',
+  'Plateau State University, Bokkos (PLASU)',
+  'Rivers State University (RSU)',
+  'Tai Solarin University of Education, Ijagun (TASUED)',
+  'Taraba State University, Jalingo (TASU)',
+  'Technical University, Ibadan',
+  'Sokoto State University (SSU)',
+  
+  // Private Universities
   'Covenant University',
   'Landmark University',
-  'Babcock University'
+  'Babcock University',
+  'Afe Babalola University, Ado-Ekiti (ABUAD)',
+  'American University of Nigeria, Yola (AUN)',
+  'Benson Idahosa University, Benin City (BIU)',
+  'Bowen University, Iwo',
+  'Caleb University, Lagos',
+  'Caritas University, Enugu',
+  'Crawford University, Igbesa',
+  'Crescent University, Abeokuta',
+  'Elizade University, Ilara-Mokin',
+  'Evangel University, Akaeze',
+  'Fountain University, Osogbo',
+  'Gregory University, Uturu',
+  'Hallmark University, Ijebu-Itele',
+  'Igbinedion University, Okada',
+  'Joseph Ayo Babalola University, Ikeji-Arakeji (JABU)',
+  'Kings University, Ode Omu',
+  'Lead City University, Ibadan',
+  'Madonna University, Okija',
+  'McPherson University, Seriki Sotayo',
+  'Mountain Top University',
+  'Novena University, Ogume',
+  'Obong University, Obong Ntak',
+  'Oduduwa University, Ipetumodu',
+  'Pan-Atlantic University, Lagos',
+  'Paul University, Awka',
+  'Redeemer\'s University, Ede',
+  'Renaissance University, Enugu',
+  'Rhema University, Obeama-Asa',
+  'Salem University, Lokoja',
+  'Samuel Adegboyega University, Ogwa',
+  'Southwestern University, Okun Owa',
+  'Summit University, Offa',
+  'Tansian University, Umunya',
+  'University of Mkar, Mkar',
+  'Veritas University, Abuja',
+  'Wellspring University, Benin City',
+  'Wesley University, Ondo',
+  'Western Delta University, Oghara',
+  'Christopher University, Mowe',
+  'Anchor University, Lagos',
+  'Augustine University, Ilara',
+  'Chrisland University, Abeokuta',
+  'Edwin Clark University, Kiagbodo',
+  'Hezekiah University, Umudi',
+  'Admiralty University of Nigeria, Ibusa',
+  'Skyline University, Kano',
+  'Dominion University, Ibadan',
+  'Precious Cornerstone University, Ibadan',
+  'PAMO University of Medical Sciences, Port Harcourt',
+  'Legacy University, Okija',
+  'Atiba University, Oyo',
+  'Nile University of Nigeria, Abuja',
+  'Trinity University, Oyo'
 ];
 
 // Password strength

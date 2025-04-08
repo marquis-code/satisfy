@@ -26,7 +26,7 @@
         <header class="py-6 px-6 md:px-10 bg-white shadow-sm">
           <div class="container mx-auto flex justify-between items-center">
             <NuxtLink to="/" class="flex items-center">
-              <img src="@/assets/img/satisfy-logo-coloured.png" alt="CTTaste" class="h-10" />
+              <img src="@/assets/img/satisfy-logo-coloured.png" alt="Satisfy" class="h-10" />
             </NuxtLink>
             <div class="flex items-center space-x-4">
               <NuxtLink to="/register" class="text-gray-700 hover:text-primary transition-colors">
@@ -145,12 +145,12 @@
                 
                 <!-- Password -->
                 <div class="form-group">
-                  <div class="flex items-center justify-between mb-1">
+                  <!-- <div class="flex items-center justify-between mb-1">
                     <label for="password" class="form-label">Password</label>
                     <NuxtLink to="/forgot-password" class="text-sm text-primary hover:underline">
                       Forgot Password?
                     </NuxtLink>
-                  </div>
+                  </div> -->
                   <div class="relative">
                     <input
                       id="password"
@@ -235,7 +235,7 @@
               <NuxtLink to="/privacy" class="hover:text-primary transition-colors">Privacy</NuxtLink>
               <NuxtLink to="/terms" class="hover:text-primary transition-colors">Terms</NuxtLink>
             </div>
-            <p>© {{ new Date().getFullYear() }} CTTaste. All rights reserved.</p>
+            <p>© {{ new Date().getFullYear() }} Satisfy. All rights reserved.</p>
           </div>
         </footer>
       </div>
