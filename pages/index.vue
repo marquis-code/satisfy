@@ -1,21 +1,6 @@
 <template>
   <div class="min-h-screen overflow-hidden bg-white">
     <WelcomeOverlay />
-    <!-- <Header /> -->
-    <!-- Food Particles Background -->
-    <!-- <div class="fixed inset-0 pointer-events-none z-0">
-      <div v-for="i in 12" :key="i" 
-        class="absolute food-particle"
-        :class="`food-${(i % 6) + 1}`"
-        :style="{
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          animationDelay: `${Math.random() * 5}s`,
-          animationDuration: `${15 + Math.random() * 15}s`
-        }"
-      ></div>
-    </div> -->
-    
 
     <div class="relative z-10 min-h-screen flex flex-col">
 
@@ -35,100 +20,6 @@
       <div class="container mx-auto px-4 pb-10">
       <FoodBannerCarousel />
      </div>
-      
-<!-- 
-      <div class="flex-1 flex flex-col items-center justify-center px-6 py-10 md:py-0">
-        <div class="container px-4 w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-
-          <div class="flex flex-col justify-center order-2 lg:order-1 animate-fade-in">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-gray-800 mb-6 animate-slide-up">
-              <span class="text-primary">Delicious</span> food,<br />
-              <span class="text-secondary">delivered</span> to<br />
-              your doorstep
-            </h1>
-            
-            <p class="text-xl text-gray-600 mb-8 animate-slide-up animation-delay-200">
-              Order your favorite meals from any food vendor on campus with just a few taps.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row gap-4 animate-slide-up animation-delay-400">
-              <button 
-                @click="navigateTo('/register')"
-                class="group relative flex items-center justify-center py-3 px-6 rounded-full text-white font-medium overflow-hidden bg-primary hover:bg-primary-dark transition-colors"
-              >
-                <span class="relative z-10">Get Started</span>
-                <ArrowRight class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-              </button>
-              
-              <button 
-                @click="navigateTo('/register')"
-                class="group relative flex items-center justify-center py-3 px-6 rounded-full border-2 border-secondary text-secondary font-medium overflow-hidden hover:bg-secondary/10 transition-colors"
-              >
-                <span class="relative z-10">Learn More</span>
-                <Info class="w-5 h-5 ml-2" />
-              </button>
-            </div>
-            
-
-            <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in animation-delay-600">
-              <div class="p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <div class="p-3 rounded-full inline-flex items-center justify-center mb-3 bg-primary/10">
-                  <Utensils class="w-6 h-6 text-primary" />
-                </div>
-                <h3 class="font-semibold text-gray-800">Wide Selection</h3>
-                <p class="text-gray-600 text-sm">Choose from hundreds of restaurants</p>
-              </div>
-              
-              <div class="p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <div class="p-3 rounded-full inline-flex items-center justify-center mb-3 bg-secondary/10">
-                  <Clock class="w-6 h-6 text-secondary" />
-                </div>
-                <h3 class="font-semibold text-gray-800">Fast Delivery</h3>
-                <p class="text-gray-600 text-sm">Get your food delivered quickly</p>
-              </div>
-              
-              <div class="p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                <div class="p-3 rounded-full inline-flex items-center justify-center mb-3 bg-accent/10">
-                  <BadgePercent class="w-6 h-6 text-accent" />
-                </div>
-                <h3 class="font-semibold text-gray-800">Special Offers</h3>
-                <p class="text-gray-600 text-sm">Exclusive deals for students</p>
-              </div>
-            </div>
-          </div>
-          
-
-          <div class="flex items-center justify-center order-1 lg:order-2">
-            <div class="relative w-full max-w-md">
-
-              <div class="relative z-20 animate-float animation-delay-300">
-
-                <div class="absolute inset-0 flex flex-col items-center justify-center p-10">
-                  <div class="w-full space-y-3 animate-pulse-slow">
-                    <div class="h-2 bg-gray-200 rounded-full w-3/4 mx-auto"></div>
-                    <div class="h-2 bg-gray-200 rounded-full w-1/2 mx-auto"></div>
-                    <div class="h-8 bg-primary/20 rounded-lg w-full mx-auto mt-4"></div>
-                  </div>
-                </div>
-              </div>
-              
-
-              <div class="absolute top-0 -right-16 z-10 animate-float animation-delay-100">
-              </div>
-              
-              <div class="absolute bottom-20 -left-16 z-10 animate-float animation-delay-500">
-              </div>
-              
-              <div class="absolute top-1/4 -left-12 z-10 animate-float animation-delay-700">
-              </div>
-          
-              <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary/20 rounded-full filter blur-xl animate-pulse-slow"></div>
-              <div class="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 rounded-full filter blur-xl animate-pulse-slow animation-delay-500"></div>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
       <main class="container mx-auto px-4 pb-10">
         <!-- {{vendors}} -->
       <!-- <PromotedVendors /> -->
@@ -156,16 +47,6 @@
             </div>
           </div>
           
-          <!-- App Stores -->
-          <!-- <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <p class="text-gray-700 font-medium">Download our mobile app:</p>
-            <button class="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <img src="/images/app-store.svg" alt="App Store" class="h-8" />
-            </button>
-            <button class="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <img src="/images/play-store.svg" alt="Play Store" class="h-8" />
-            </button>
-          </div> -->
         </div>
       </div>
     </div>
