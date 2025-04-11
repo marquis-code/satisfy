@@ -144,7 +144,7 @@
       <div 
         v-for="vendor in vendors" 
         :key="vendor._id"
-        @click="router.push(`/vendors/${vendor._id}`)"
+        @click="handleSelectedVendor(vendor)"
         class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
       >
         <div class="relative">
@@ -279,5 +279,10 @@ const suggestedVendors = computed(() => {
     .sort(() => 0.5 - Math.random())
     .slice(0, 6);
 });
+
+const handleSelectedVendor = (vendor: any) => {
+  localStorage.setItem('selected-vendor', JSON.stringify(vendor))
+  router.push(`/vendors/${vendor._id}`)
+}
 </script>
 

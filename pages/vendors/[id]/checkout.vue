@@ -24,9 +24,9 @@
               </h2>
               <span
                 class="text-sm bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full font-medium animate-pulse"
-                v-if="cart.totalItems.value > 0"
+                v-if="cart?.totalItems.value > 0"
               >
-                {{ cart.totalItems.value }} items
+                {{ cart?.totalItems.value }} items
               </span>
             </div>
 
@@ -554,7 +554,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useCart } from "~/composables/useCart";
 import { useToast } from "~/composables/useToast";
 import { useCreateOrder } from "@/composables/modules/order/useCreateOrder";
@@ -663,6 +663,7 @@ const savePackNote = () => {
 
 const goBack = () => {
   router.push("/");
+  cart.clearCart();
 };
 
 const goToHome = () => {
@@ -786,7 +787,7 @@ try {
   showOrderSuccessModal.value = true;
 
   // Clear cart
-  cart.clearCart();
+  // cart.clearCart();
 
   // If save order is checked, we would save it to the user's profile
   if (saveOrder.value) {
@@ -802,93 +803,6 @@ try {
   });
 }
 };
-
-// const submitOrder = async () => {
-//   if (!validateForm()) {
-//     showToast({
-//       title: "Warning",
-//       message: "Please fill in all required fields correctly",
-//       toastType: "warning",
-//       duration: 3000,
-//     });
-//     return;
-//   }
-
-//   if (cart.totalItems.value === 0) {
-//     showToast({
-//       title: "Warning",
-//       message: "Your cart is empty",
-//       toastType: "warning",
-//       duration: 3000,
-//     });
-//     return;
-//   }
-
-//   try {
-//     // Process each pack as a separate order
-//     orderIds.value = [];
-    
-//     // For each pack in the cart, create a separate order
-//     for (let packIndex = 0; packIndex < cart.packs.value.length; packIndex++) {
-//       const pack = cart.packs.value[packIndex];
-      
-//       // Skip empty packs
-//       if (pack.items.length === 0) continue;
-      
-//       // Create order data for this specific pack
-//       const orderData = {
-//         phoneNumber: phoneNumber.value,
-//         deliveryType: deliveryMethod.value as "delivery" | "pickup",
-//         location: location.value,
-//         address: deliveryMethod.value === "delivery" ? deliveryAddress.value : "",
-//         vendorId: route.params.id, // This would come from your app state in a real app
-//         items: pack.items.map(item => ({
-//           menuItemId: item.mealId,
-//           quantity: item.quantity,
-//           // price: item.price,
-//           // name: item.name
-//         })),
-//         // Add the pack-specific note if it exists
-//         notes: pack.note || ""
-//       };
-      
-//       // Add additional notes to the order if provided
-//       if (additionalNotes.value.trim()) {
-//         orderData.notes = orderData.notes
-//           ? `${orderData.notes}. ${additionalNotes.value}`
-//           : additionalNotes.value;
-//       }
-      
-//       console.log(orderData, 'hello worlds')
-//       // Submit this pack as an order
-//       const response = await createOrder(orderData);
-//       if (response && response._id) {
-//         orderIds.value.push(response._id);
-//       }
-//     }
-
-//     // Show success message with animation
-//     orderSuccess.value = true;
-//     showOrderSuccessModal.value = true;
-
-//     // Clear cart
-//     cart.clearCart();
-
-//     // If save order is checked, we would save it to the user's profile
-//     // In a real app, you would send this to an API
-//     if (saveOrder.value) {
-//       console.log("Saving order for future use");
-//     }
-//   } catch (err) {
-//     console.error("Error submitting order:", err);
-//     showToast({
-//       title: "Error",
-//       message: "Failed to submit order. Please try again.",
-//       toastType: "error",
-//       duration: 3000,
-//     });
-//   }
-// };
 
 // Watch for delivery method changes to reset validation errors
 watch(deliveryMethod, () => {
@@ -915,49 +829,108 @@ onMounted(() => {
 });
 
 const chatWithVendor = () => {
-// Construct order details message
-let message = "Hello, I would like to place an order:\n\n";
-
-// Add items from each pack
-cart.packs.value.forEach((pack, packIndex) => {
-  if (pack.items.length > 0) {
-    message += `Pack ${packIndex + 1}:\n`;
-    
-    pack.items.forEach(item => {
-      message += `- ${item.quantity}x ${item.name} (₦${formatPrice(item.price * item.quantity)})\n`;
-    });
-    
-    if (pack.note) {
-      message += `Note: ${pack.note}\n`;
+  // Get vendor details from local storage
+  let vendorData = null;
+  try {
+    const vendorString = localStorage.getItem("selected-vendor");
+    if (vendorString) {
+      vendorData = JSON.parse(vendorString);
     }
-    
-    message += "\n";
+  } catch (error) {
+    console.error("Error retrieving vendor data:", error);
   }
-});
 
-// Add delivery details
-message += `Delivery Method: ${deliveryMethod.value === 'delivery' ? 'Delivery' : 'Pickup'}\n`;
-message += `Location: ${location.value}\n`;
+  // If no vendor data or phone number, use a fallback approach
+  const vendorPhone = vendorData?.phoneNumber || "";
+  const vendorName = vendorData?.restaurantName || "Vendor";
+  
+  // Create an exciting and user-friendly message
+  let message = `🎉 *NEW ORDER FOR ${vendorName.toUpperCase()}!* 🎉\n\n`;
+  
+  // Add a friendly greeting
+  message += `Hi there! You've got a delicious new order from ${customerName.value}! 😋\n\n`;
+  
+  // Add order details with emojis and formatting
+  message += `📋 *ORDER DETAILS* (${cart.totalItems.value} items) 📋\n\n`;
+  
+  // Add items from each pack with friendly formatting
+  let packCounter = 0;
+  cart.packs.value.forEach((pack, packIndex) => {
+    if (pack.items.length > 0) {
+      packCounter++;
+      message += `🍱 *PACK ${packCounter}* (${pack.items.length} ${pack.items.length === 1 ? 'item' : 'items'}) 🍱\n\n`;
+      
+      // Add each item in the pack with exciting format
+      pack.items.forEach(item => {
+        message += `🔸 *${item.name}*\n`;
+        message += `   ₦${formatPrice(item.price)} × ${item.quantity} = ₦${formatPrice(item.price * item.quantity)}\n\n`;
+      });
+      
+      // Add pack note if exists
+      if (pack.note) {
+        message += `📝 *Special Request:* ${pack.note}\n\n`;
+      }
+    }
+  });
+  
+  // Add order summary section with eye-catching format
+  message += `💰 *ORDER SUMMARY* 💰\n\n`;
+  message += `📌 Subtotal: ₦${formatPrice(cart.subtotal.value)}\n`;
+  message += `📌 Service Charge: ₦${formatPrice(serviceCharge)}\n`;
+  message += `📌 Delivery Fee: ₦${formatPrice(deliveryFee.value)}\n`;
+  message += `🔥 *GRAND TOTAL: ₦${formatPrice(calculateGrandTotal())}* 🔥\n\n`;
+  
+  // Add customer details section with friendly format
+  message += `👤 *CUSTOMER DETAILS* 👤\n\n`;
+  message += `🙋 Name: ${customerName.value}\n`;
+  message += `📞 Phone: ${phoneNumber.value}\n`;
+  message += `📍 Location: ${location.value}\n`;
+  
+  if (deliveryMethod.value === 'delivery' && deliveryAddress.value) {
+    message += `🏠 Delivery Address: ${deliveryAddress.value}\n`;
+  }
+  
+  message += `🚚 Delivery Method: ${deliveryMethod.value === 'delivery' ? '🚚 Delivery' : '🏪 Pickup'}\n\n`;
+  
+  // Add additional notes if provided
+  if (additionalNotes.value) {
+    message += `📝 *Additional Notes:* ${additionalNotes.value}\n\n`;
+  }
+  
+  // Add a friendly closing message
+  message += `⏰ Order placed at: ${new Date().toLocaleTimeString()}\n\n`;
+  message += `Thank you for your prompt attention! We're excited to receive this delicious order! 🙏\n`;
+  
+  // Encode the message for WhatsApp URL
+  const encodedMessage = encodeURIComponent(message);
+  
+  // Format the phone number correctly for WhatsApp
+  // WhatsApp requires the phone number to be in international format without any special characters
+  let formattedPhone = "";
+  if (vendorPhone) {
+    // Remove any non-digit characters
+    formattedPhone = vendorPhone.replace(/\D/g, "");
+    
+    // Ensure it starts with country code (if not already)
+    if (!formattedPhone.startsWith("234") && formattedPhone.startsWith("0")) {
+      // Replace leading 0 with 234 (Nigeria's country code)
+      formattedPhone = "234" + formattedPhone.substring(1);
+    }
+  }
+  
+  // Open WhatsApp with the message and vendor's phone number
+  // If no vendor phone number is available, it will open WhatsApp without a specific recipient
+  const whatsappUrl = formattedPhone 
+    ? `https://wa.me/${formattedPhone}?text=${encodedMessage}` 
+    : `https://wa.me/?text=${encodedMessage}`;
+  
+  console.log("Opening WhatsApp URL:", whatsappUrl);
+  window.open(whatsappUrl, '_blank');
 
-if (deliveryMethod.value === 'delivery' && deliveryAddress.value) {
-  message += `Address: ${deliveryAddress.value}\n`;
-}
-
-if (additionalNotes.value) {
-  message += `Additional Notes: ${additionalNotes.value}\n`;
-}
-
-// Add contact info
-message += `\nContact: ${phoneNumber.value}\n`;
-
-// Encode the message for WhatsApp URL
-const encodedMessage = encodeURIComponent(message);
-
-// Open WhatsApp with the message
-// Note: In a real app, you would replace this with the vendor's actual phone number
-window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+  cart.clearCart();
 };
 </script>
+
 
 <style scoped>
 .animate-fade-in-up {
