@@ -922,39 +922,6 @@
     if (!validateStep()) return;
     
     try {
-      // Create user data object from form
-    //   const userData = {
-    //     fullName: form.value.fullName,
-    //     email: form.value.email,
-    //     phone: form.value.phone,
-    //     school: form.value.school,
-    //     address: form.value.address,
-    //     password: form.value.password,
-    //     securityQuestion: form.value.securityQuestion,
-    //     securityAnswer: form.value.securityAnswer,
-    //     emailUpdates: form.value.emailUpdates,
-    //     smsUpdates: form.value.smsUpdates,
-    //     referralCode: form.value.referralCode
-    //   };
-      
-    //   const customerPayload = {
-    //     "fullName": "Test customer",
-    //     "email": "customer@example.com",
-    //     "phoneNumber": "094774664",
-    //     "locationName": "FUNAAB",
-    //     "password": "password"
-    //   }
-
-    //   const vendorPayload = {
-    //     "restaurantName": "test restaurant",
-    //     "email": "test.restuarant@example.com",
-    //     "phoneNumber": "094774664",
-    //     "locationName": "Test road",
-    //     "address": "21, sunshine road",
-    //     "category": "fast food",
-    //     "password": "password"
-    //   }
-
     const userData = {
         fullName: form.value.fullName,
         email: form.value.email,
